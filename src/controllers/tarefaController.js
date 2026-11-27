@@ -45,5 +45,29 @@ async function atualizarParcial(req, res) {
   res.status(200).json(tarefaAtualizada);
 }
 
+async function atualizar(req, res) {
+  const tarefaAtualizada = await tarefaService.atualizarTarefa(
+    req.params.id,
+    req.body,
+  );
+  if (!tarefaAtualizada) {
+    res.status(404).json({ erro: "Tarefa nao encontrada" });
+    return;
+  }
+  res.status(200).json(tarefaAtualizada);
+}
+
+async function atualizarParcial(req, res) {
+  const tarefaAtualizada = await tarefaService.atualizarParcialTarefa(
+    req.params.id,
+    req.body,
+  );
+  if (!tarefaAtualizada) {
+    res.status(404).json({ erro: "Tarefa nao encontrada" });
+    return;
+  }
+  res.status(200).json(tarefaAtualizada);
+}
+
 
 module.exports = { listar, buscarPorId, criar, atualizar, atualizarParcial };
