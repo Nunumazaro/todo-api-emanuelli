@@ -16,5 +16,7 @@ router.post("/", tarefaController.criar);
 router.put("/:id", validarId, tarefaController.atualizar);
 router.patch("/:id", validarId, tarefaController.atualizarParcial);
 
+module.exports = { listar, buscarPorId, criar, atualizar, atualizarParcia, };
+
 
 module.exports = router;
