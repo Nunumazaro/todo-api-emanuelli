@@ -3,8 +3,8 @@
 const tarefaService = require("../services/tarefaService");
 
 async function listar(req, res) {
-const tarefas = await tarefaService.listarTarefas(req.query);
-res.status(200).json(tarefas);
+  const tarefas = await tarefaService.listarTarefas(req.query);
+  res.status(200).json(tarefas);
 }
 
 async function buscarPorId(req, res) {
@@ -17,11 +17,23 @@ async function buscarPorId(req, res) {
 }
 
 async function criar(req, res) {
+  const erro = tarefaService.validarTarefa(req.body, true);
+  if (erro) {
+    res.status(400).json({ erro: erro });
+    return;
+  }
+
   const novaTarefa = await tarefaService.criarTarefa(req.body);
   res.status(201).json(novaTarefa);
 }
 
 async function atualizar(req, res) {
+  const erro = tarefaService.validarTarefa(req.body, true);
+  if (erro) {
+    res.status(400).json({ erro: erro });
+    return;
+  }
+
   const tarefaAtualizada = await tarefaService.atualizarTarefa(
     req.params.id,
     req.body,
@@ -34,30 +46,12 @@ async function atualizar(req, res) {
 }
 
 async function atualizarParcial(req, res) {
-  const tarefaAtualizada = await tarefaService.atualizarParcialTarefa(
-    req.params.id,
-    req.body,
-  );
-  if (!tarefaAtualizada) {
-    res.status(404).json({ erro: "Tarefa nao encontrada" });
+  const erro = tarefaService.validarTarefa(req.body, false);
+  if (erro) {
+    res.status(400).json({ erro: erro });
     return;
   }
-  res.status(200).json(tarefaAtualizada);
-}
 
-async function atualizar(req, res) {
-  const tarefaAtualizada = await tarefaService.atualizarTarefa(
-    req.params.id,
-    req.body,
-  );
-  if (!tarefaAtualizada) {
-    res.status(404).json({ erro: "Tarefa nao encontrada" });
-    return;
-  }
-  res.status(200).json(tarefaAtualizada);
-}
-
-async function atualizarParcial(req, res) {
   const tarefaAtualizada = await tarefaService.atualizarParcialTarefa(
     req.params.id,
     req.body,
@@ -78,4 +72,11 @@ async function deletar(req, res) {
   res.status(204).send();
 }
 
-module.exports = { listar, buscarPorId, criar, atualizar, atualizarParcial, deletar };
+module.exports = {
+  listar,
+  buscarPorId,
+  criar,
+  atualizar,
+  atualizarParcial,
+  deletar,
+};
